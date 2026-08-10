@@ -282,3 +282,19 @@ ul {
     padding: 20px;
   }
 }
+.enquiry-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-field input,
+.form-field select {
+  width: 100%;
+}
