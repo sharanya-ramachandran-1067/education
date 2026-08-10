@@ -67,8 +67,8 @@ export default function EnquiriesPage() {
         <h3>Add enquiry</h3>
 
         <form onSubmit={handleSubmit} className="stack-md">
-          <div className="stack-md">
-            <label>
+          <div className="enquiry-form">
+            <label className="form-field">
               Parent name
               <input
                 value={form.parentName}
@@ -79,7 +79,7 @@ export default function EnquiriesPage() {
               />
             </label>
 
-            <label>
+            <label className="form-field">
               Child name
               <input
                 value={form.childName}
@@ -90,7 +90,7 @@ export default function EnquiriesPage() {
               />
             </label>
 
-            <label>
+            <label className="form-field">
               Interested program
               <select
                 value={form.interestedProgram}
@@ -106,7 +106,7 @@ export default function EnquiriesPage() {
               </select>
             </label>
 
-            <label>
+            <label className="form-field">
               Day care
               <select
                 value={form.dayCare}
@@ -125,7 +125,7 @@ export default function EnquiriesPage() {
             </label>
 
             {form.dayCare === "Yes" && (
-              <label>
+              <label className="form-field">
                 Day care timings
                 <input
                   value={form.dayCareTimings}
@@ -137,7 +137,7 @@ export default function EnquiriesPage() {
               </label>
             )}
 
-            <label>
+            <label className="form-field">
               Status
               <select
                 value={form.status}
