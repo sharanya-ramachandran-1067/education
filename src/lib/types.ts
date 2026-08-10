@@ -19,7 +19,9 @@ export type Student = {
   name: string;
   classroom: string;
   parentName: string;
+  parentContact: string;
   schedule: string;
+  dayCare: "Yes" | "No";
 };
 
 export type FeeItem = {
