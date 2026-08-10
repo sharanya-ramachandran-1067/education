@@ -37,7 +37,7 @@ export default function EnquiriesPage() {
       !form.childName.trim() ||
       !form.interestedProgram.trim() ||
       !form.dayCare.trim() ||
-      !form.dayCareTimings.trim()
+      (form.dayCare === "Yes" && !form.dayCareTimings.trim())
     ) {
       return;
     }
@@ -48,7 +48,7 @@ export default function EnquiriesPage() {
       childName: form.childName.trim(),
       interestedProgram: form.interestedProgram.trim(),
       dayCare: form.dayCare.trim(),
-      dayCareTimings: form.dayCareTimings.trim(),
+      dayCareTimings: form.dayCare === "Yes" ? form.dayCareTimings.trim() : "",
       status: form.status,
     };
 
@@ -67,12 +67,14 @@ export default function EnquiriesPage() {
         <h3>Add enquiry</h3>
 
         <form onSubmit={handleSubmit} className="stack-md">
-          <div className="grid">
+          <div className="stack-md">
             <label>
               Parent name
               <input
                 value={form.parentName}
-                onChange={(e) => setForm((current) => ({ ...current, parentName: e.target.value }))}
+                onChange={(e) =>
+                  setForm((current) => ({ ...current, parentName: e.target.value }))
+                }
                 placeholder="Lakshmi"
               />
             </label>
@@ -81,7 +83,9 @@ export default function EnquiriesPage() {
               Child name
               <input
                 value={form.childName}
-                onChange={(e) => setForm((current) => ({ ...current, childName: e.target.value }))}
+                onChange={(e) =>
+                  setForm((current) => ({ ...current, childName: e.target.value }))
+                }
                 placeholder="Kavi"
               />
             </label>
@@ -106,24 +110,32 @@ export default function EnquiriesPage() {
               Day care
               <select
                 value={form.dayCare}
-                onChange={(e) => setForm((current) => ({ ...current, dayCare: e.target.value }))}
+                onChange={(e) =>
+                  setForm((current) => ({
+                    ...current,
+                    dayCare: e.target.value,
+                    dayCareTimings: e.target.value === "Yes" ? current.dayCareTimings : "",
+                  }))
+                }
               >
                 <option value="">Select day care</option>
-                <option value="Required">Required</option>
-                <option value="Not required">Not required</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
               </select>
             </label>
 
-            <label>
-              Day care timings
-              <input
-                value={form.dayCareTimings}
-                onChange={(e) =>
-                  setForm((current) => ({ ...current, dayCareTimings: e.target.value }))
-                }
-                placeholder="8:30 AM - 5:30 PM"
-              />
-            </label>
+            {form.dayCare === "Yes" && (
+              <label>
+                Day care timings
+                <input
+                  value={form.dayCareTimings}
+                  onChange={(e) =>
+                    setForm((current) => ({ ...current, dayCareTimings: e.target.value }))
+                  }
+                  placeholder="8:30 AM - 5:30 PM"
+                />
+              </label>
+            )}
 
             <label>
               Status
@@ -158,7 +170,10 @@ export default function EnquiriesPage() {
                   {enquiry.childName} • {enquiry.interestedProgram}
                 </p>
                 <p>
-                  Day care: {enquiry.dayCare} • Timings: {enquiry.dayCareTimings}
+                  Day care: {enquiry.dayCare}
+                  {enquiry.dayCare === "Yes" && enquiry.dayCareTimings
+                    ? ` • Timings: ${enquiry.dayCareTimings}`
+                    : ""}
                 </p>
               </div>
               <span>{enquiry.status}</span>
