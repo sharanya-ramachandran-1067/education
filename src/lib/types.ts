@@ -9,6 +9,8 @@ export type Enquiry = {
   parentName: string;
   childName: string;
   interestedProgram: string;
+  dayCare: string;
+  dayCareTimings: string;
   status: "New" | "Follow-up" | "Visit booked";
 };
 
