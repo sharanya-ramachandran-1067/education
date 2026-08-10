@@ -10,6 +10,8 @@ const initialForm = {
   parentName: "",
   childName: "",
   interestedProgram: "",
+  dayCare: "",
+  dayCareTimings: "",
   status: "New" as Enquiry["status"],
 };
 
@@ -30,7 +32,13 @@ export default function EnquiriesPage() {
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    if (!form.parentName.trim() || !form.childName.trim() || !form.interestedProgram.trim()) {
+    if (
+      !form.parentName.trim() ||
+      !form.childName.trim() ||
+      !form.interestedProgram.trim() ||
+      !form.dayCare.trim() ||
+      !form.dayCareTimings.trim()
+    ) {
       return;
     }
 
@@ -39,6 +47,8 @@ export default function EnquiriesPage() {
       parentName: form.parentName.trim(),
       childName: form.childName.trim(),
       interestedProgram: form.interestedProgram.trim(),
+      dayCare: form.dayCare.trim(),
+      dayCareTimings: form.dayCareTimings.trim(),
       status: form.status,
     };
 
@@ -78,12 +88,40 @@ export default function EnquiriesPage() {
 
             <label>
               Interested program
-              <input
+              <select
                 value={form.interestedProgram}
                 onChange={(e) =>
                   setForm((current) => ({ ...current, interestedProgram: e.target.value }))
                 }
-                placeholder="Playgroup"
+              >
+                <option value="">Select a program</option>
+                <option value="Playgroup">Playgroup</option>
+                <option value="Nursery">Nursery</option>
+                <option value="LKG">LKG</option>
+                <option value="UKG">UKG</option>
+              </select>
+            </label>
+
+            <label>
+              Day care
+              <select
+                value={form.dayCare}
+                onChange={(e) => setForm((current) => ({ ...current, dayCare: e.target.value }))}
+              >
+                <option value="">Select day care</option>
+                <option value="Required">Required</option>
+                <option value="Not required">Not required</option>
+              </select>
+            </label>
+
+            <label>
+              Day care timings
+              <input
+                value={form.dayCareTimings}
+                onChange={(e) =>
+                  setForm((current) => ({ ...current, dayCareTimings: e.target.value }))
+                }
+                placeholder="8:30 AM - 5:30 PM"
               />
             </label>
 
@@ -118,6 +156,9 @@ export default function EnquiriesPage() {
                 <strong>{enquiry.parentName}</strong>
                 <p>
                   {enquiry.childName} • {enquiry.interestedProgram}
+                </p>
+                <p>
+                  Day care: {enquiry.dayCare} • Timings: {enquiry.dayCareTimings}
                 </p>
               </div>
               <span>{enquiry.status}</span>
