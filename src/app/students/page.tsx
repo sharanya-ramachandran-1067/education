@@ -1,8 +1,12 @@
+"use client";
+
 import EmptyState from "@/components/EmptyState";
 import ModuleHeader from "@/components/ModuleHeader";
-import { students } from "@/lib/mockData";
+import { useAppContext } from "@/lib/AppContext";
 
 export default function StudentsPage() {
+  const { students } = useAppContext();
+
   return (
     <div className="stack-lg">
       <ModuleHeader
@@ -11,7 +15,7 @@ export default function StudentsPage() {
       />
 
       <section className="card">
-        <h3>Enrolled students</h3>
+        <h3>Student directory</h3>
         {students.length === 0 ? (
           <EmptyState
             title="No students enrolled yet"
@@ -27,11 +31,12 @@ export default function StudentsPage() {
                     {student.classroom} &bull; {student.schedule}
                   </p>
                   <p>
-                    Parent: {student.parentName} &bull; {student.parentContact}
+                    Parent: {student.parentName}
+                    {student.parentContact ? ` \u2022 ${student.parentContact}` : ""}
                   </p>
                 </div>
                 <span>
-                  {student.dayCare === "Yes" ? "Day care ✓" : "Day care: No"}
+                  {student.dayCare === "Yes" ? "Day care \u2713" : "Day care: No"}
                 </span>
               </li>
             ))}
@@ -41,3 +46,4 @@ export default function StudentsPage() {
     </div>
   );
 }
+

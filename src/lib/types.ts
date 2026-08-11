@@ -11,7 +11,7 @@ export type Enquiry = {
   interestedProgram: string;
   dayCare: string;
   dayCareTimings: string;
-  status: "New" | "Follow-up" | "Visit booked";
+  status: "New" | "Follow-up" | "Visit booked" | "Converted";
 };
 
 export type Student = {
@@ -19,7 +19,9 @@ export type Student = {
   name: string;
   classroom: string;
   parentName: string;
+  parentContact: string;
   schedule: string;
+  dayCare: string;
 };
 
 export type FeeItem = {

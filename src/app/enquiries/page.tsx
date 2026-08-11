@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import EmptyState from "@/components/EmptyState";
 import ModuleHeader from "@/components/ModuleHeader";
-import { recentEnquiries } from "@/lib/mockData";
+import { useAppContext } from "@/lib/AppContext";
 import type { Enquiry } from "@/lib/types";
 
 const initialForm = {
@@ -16,8 +16,11 @@ const initialForm = {
 };
 
 export default function EnquiriesPage() {
-  const [enquiries, setEnquiries] = useState<Enquiry[]>(recentEnquiries);
+  const { enquiries, addEnquiry, convertEnquiry } = useAppContext();
   const [form, setForm] = useState(initialForm);
+
+  const openEnquiries = enquiries.filter((enq) => enq.status !== "Converted");
+  const convertedEnquiries = enquiries.filter((enq) => enq.status === "Converted");
 
   const nextId = useMemo(() => {
     const maxNumber = enquiries.reduce((max, enquiry) => {
@@ -52,7 +55,7 @@ export default function EnquiriesPage() {
       status: form.status,
     };
 
-    setEnquiries((current) => [newEnquiry, ...current]);
+    addEnquiry(newEnquiry);
     setForm(initialForm);
   }
 
@@ -160,33 +163,61 @@ export default function EnquiriesPage() {
       </section>
 
       <section className="card">
-        <h3>Recent enquiries</h3>
-        <ul className="list">
-          {enquiries.map((enquiry) => (
-            <li key={enquiry.id} className="list-row">
-              <div>
-                <strong>{enquiry.parentName}</strong>
-                <p>
-                  {enquiry.childName} • {enquiry.interestedProgram}
-                </p>
-                <p>
-                  Day care: {enquiry.dayCare}
-                  {enquiry.dayCare === "Yes" && enquiry.dayCareTimings
-                    ? ` • Timings: ${enquiry.dayCareTimings}`
-                    : ""}
-                </p>
-              </div>
-              <span>{enquiry.status}</span>
-            </li>
-          ))}
-        </ul>
+        <h3>Open enquiries</h3>
+        {openEnquiries.length === 0 ? (
+          <EmptyState
+            title="No open enquiries"
+            description="All enquiries have been converted to students."
+          />
+        ) : (
+          <ul className="list">
+            {openEnquiries.map((enquiry) => (
+              <li key={enquiry.id} className="list-row">
+                <div>
+                  <strong>{enquiry.parentName}</strong>
+                  <p>
+                    {enquiry.childName} &bull; {enquiry.interestedProgram}
+                  </p>
+                  <p>
+                    Day care: {enquiry.dayCare}
+                    {enquiry.dayCare === "Yes" && enquiry.dayCareTimings
+                      ? ` • Timings: ${enquiry.dayCareTimings}`
+                      : ""}
+                  </p>
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "0.5rem" }}>
+                  <span>{enquiry.status}</span>
+                  <button
+                    type="button"
+                    onClick={() => convertEnquiry(enquiry.id)}
+                  >
+                    Convert to student
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
       </section>
 
-      <EmptyState
-        title="Admission pipeline actions can come next"
-        description="Add follow-up reminders and visit booking once the local add flow is working."
-        hint="For now, new enquiries live only in the browser session."
-      />
+      {convertedEnquiries.length > 0 && (
+        <section className="card">
+          <h3>Converted enquiries</h3>
+          <ul className="list">
+            {convertedEnquiries.map((enquiry) => (
+              <li key={enquiry.id} className="list-row">
+                <div>
+                  <strong>{enquiry.parentName}</strong>
+                  <p>
+                    {enquiry.childName} &bull; {enquiry.interestedProgram}
+                  </p>
+                </div>
+                <span>Converted &#x2713;</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
     </div>
   );
 }

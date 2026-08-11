@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Sidebar from "@/components/Sidebar";
 import Topbar from "@/components/Topbar";
+import { AppProvider } from "@/lib/AppContext";
 import "@/styles/globals.css";
 
 export const metadata: Metadata = {
@@ -20,7 +21,9 @@ export default function RootLayout({
           <Sidebar />
           <div className="app-main">
             <Topbar />
-            <main className="app-content">{children}</main>
+            <AppProvider>
+              <main className="app-content">{children}</main>
+            </AppProvider>
           </div>
         </div>
       </body>
