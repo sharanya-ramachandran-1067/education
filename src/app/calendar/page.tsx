@@ -1,4 +1,3 @@
-import EmptyState from "@/components/EmptyState";
 import ModuleHeader from "@/components/ModuleHeader";
 import { calendarEvents } from "@/lib/mockData";
 
@@ -24,11 +23,7 @@ export default function CalendarPage() {
           ))}
         </ul>
       </section>
-
-      <EmptyState
-        title="Full scheduling can be added later"
-        description="Recurring events, PTMs, attendance days, and room bookings can plug into this route later."
-      />
     </div>
   );
 }
+

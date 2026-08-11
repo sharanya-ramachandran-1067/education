@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import EmptyState from "@/components/EmptyState";
 import ModuleHeader from "@/components/ModuleHeader";
-import { recentEnquiries } from "@/lib/mockData";
+import { useAppContext } from "@/lib/AppContext";
 import type { Enquiry } from "@/lib/types";
 
 const initialForm = {
@@ -12,12 +12,25 @@ const initialForm = {
   interestedProgram: "",
   dayCare: "",
   dayCareTimings: "",
+  followUpDate: "",
   status: "New" as Enquiry["status"],
 };
 
+const STATUS_OPTIONS: Array<Enquiry["status"]> = ["New", "Follow-up", "Visit booked"];
+
 export default function EnquiriesPage() {
-  const [enquiries, setEnquiries] = useState<Enquiry[]>(recentEnquiries);
+  const { enquiries, addEnquiry, convertEnquiry } = useAppContext();
   const [form, setForm] = useState(initialForm);
+  const [confirmId, setConfirmId] = useState<string | null>(null);
+  const [filterStatus, setFilterStatus] = useState<string>("All");
+
+  const openEnquiries = useMemo(() => {
+    const open = enquiries.filter((enq) => enq.status !== "Converted");
+    if (filterStatus === "All") return open;
+    return open.filter((enq) => enq.status === filterStatus);
+  }, [enquiries, filterStatus]);
+
+  const convertedEnquiries = enquiries.filter((enq) => enq.status === "Converted");
 
   const nextId = useMemo(() => {
     const maxNumber = enquiries.reduce((max, enquiry) => {
@@ -25,7 +38,6 @@ export default function EnquiriesPage() {
       const value = match ? Number(match[1]) : 0;
       return Math.max(max, value);
     }, 0);
-
     return `ENQ-${String(maxNumber + 1).padStart(3, "0")}`;
   }, [enquiries]);
 
@@ -49,12 +61,26 @@ export default function EnquiriesPage() {
       interestedProgram: form.interestedProgram.trim(),
       dayCare: form.dayCare.trim(),
       dayCareTimings: form.dayCare === "Yes" ? form.dayCareTimings.trim() : "",
+      followUpDate: form.followUpDate,
       status: form.status,
     };
 
-    setEnquiries((current) => [newEnquiry, ...current]);
+    addEnquiry(newEnquiry);
     setForm(initialForm);
   }
+
+  function handleConvertClick(enquiryId: string) {
+    setConfirmId(enquiryId);
+  }
+
+  function handleConfirmConvert() {
+    if (confirmId) {
+      convertEnquiry(confirmId);
+      setConfirmId(null);
+    }
+  }
+
+  const confirmEnquiry = confirmId ? enquiries.find((e) => e.id === confirmId) : null;
 
   return (
     <div className="stack-lg">
@@ -62,6 +88,31 @@ export default function EnquiriesPage() {
         title="Enquiries"
         description="Capture parent interest, schedule visits, and convert admissions in one place."
       />
+
+      {/* Confirmation dialog */}
+      {confirmEnquiry && (
+        <div className="card" style={{ borderColor: "var(--accent)", background: "var(--accent-soft)" }}>
+          <h3>Convert enquiry to student?</h3>
+          <p style={{ margin: "8px 0 16px" }}>
+            This will enrol <strong>{confirmEnquiry.childName}</strong> (parent:{" "}
+            {confirmEnquiry.parentName}) as a student in the{" "}
+            <strong>{confirmEnquiry.interestedProgram}</strong> programme. The enquiry
+            will be marked as converted.
+          </p>
+          <div style={{ display: "flex", gap: "10px" }}>
+            <button type="button" className="btn" onClick={handleConfirmConvert}>
+              Yes, convert
+            </button>
+            <button
+              type="button"
+              className="btn btn-ghost"
+              onClick={() => setConfirmId(null)}
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
 
       <section className="card">
         <h3>Add enquiry</h3>
@@ -138,6 +189,17 @@ export default function EnquiriesPage() {
             )}
 
             <label className="form-field">
+              Follow-up date
+              <input
+                type="date"
+                value={form.followUpDate}
+                onChange={(e) =>
+                  setForm((current) => ({ ...current, followUpDate: e.target.value }))
+                }
+              />
+            </label>
+
+            <label className="form-field">
               Status
               <select
                 value={form.status}
@@ -155,38 +217,88 @@ export default function EnquiriesPage() {
             </label>
           </div>
 
-          <button type="submit">Add enquiry</button>
+          <button type="submit" className="btn">Add enquiry</button>
         </form>
       </section>
 
       <section className="card">
-        <h3>Recent enquiries</h3>
-        <ul className="list">
-          {enquiries.map((enquiry) => (
-            <li key={enquiry.id} className="list-row">
-              <div>
-                <strong>{enquiry.parentName}</strong>
-                <p>
-                  {enquiry.childName} • {enquiry.interestedProgram}
-                </p>
-                <p>
-                  Day care: {enquiry.dayCare}
-                  {enquiry.dayCare === "Yes" && enquiry.dayCareTimings
-                    ? ` • Timings: ${enquiry.dayCareTimings}`
-                    : ""}
-                </p>
-              </div>
-              <span>{enquiry.status}</span>
-            </li>
-          ))}
-        </ul>
+        <h3>Open enquiries</h3>
+
+        <div className="filter-bar">
+          <select
+            value={filterStatus}
+            onChange={(e) => setFilterStatus(e.target.value)}
+            aria-label="Filter by status"
+          >
+            <option value="All">All statuses</option>
+            {STATUS_OPTIONS.map((s) => (
+              <option key={s} value={s}>{s}</option>
+            ))}
+          </select>
+        </div>
+
+        {openEnquiries.length === 0 ? (
+          <EmptyState
+            title="No open enquiries"
+            description={
+              filterStatus !== "All"
+                ? `No enquiries with status "${filterStatus}".`
+                : "All enquiries have been converted to students."
+            }
+          />
+        ) : (
+          <ul className="list">
+            {openEnquiries.map((enquiry) => (
+              <li key={enquiry.id} className="list-row">
+                <div>
+                  <strong>{enquiry.parentName}</strong>
+                  <p>
+                    {enquiry.childName} &bull; {enquiry.interestedProgram}
+                  </p>
+                  <p>
+                    Day care: {enquiry.dayCare}
+                    {enquiry.dayCare === "Yes" && enquiry.dayCareTimings
+                      ? ` \u2022 Timings: ${enquiry.dayCareTimings}`
+                      : ""}
+                  </p>
+                  {enquiry.followUpDate && (
+                    <p>Follow-up: {enquiry.followUpDate}</p>
+                  )}
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "0.5rem" }}>
+                  <span>{enquiry.status}</span>
+                  <button
+                    type="button"
+                    className="btn btn-sm"
+                    onClick={() => handleConvertClick(enquiry.id)}
+                  >
+                    Convert to student
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
       </section>
 
-      <EmptyState
-        title="Admission pipeline actions can come next"
-        description="Add follow-up reminders and visit booking once the local add flow is working."
-        hint="For now, new enquiries live only in the browser session."
-      />
+      {convertedEnquiries.length > 0 && (
+        <section className="card">
+          <h3>Converted enquiries</h3>
+          <ul className="list">
+            {convertedEnquiries.map((enquiry) => (
+              <li key={enquiry.id} className="list-row">
+                <div>
+                  <strong>{enquiry.parentName}</strong>
+                  <p>
+                    {enquiry.childName} &bull; {enquiry.interestedProgram}
+                  </p>
+                </div>
+                <span>Converted &#x2713;</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
     </div>
   );
 }
