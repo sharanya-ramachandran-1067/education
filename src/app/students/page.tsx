@@ -7,30 +7,35 @@ export default function StudentsPage() {
     <div className="stack-lg">
       <ModuleHeader
         title="Students"
-        description="Keep child profiles, classroom placement, and parent linkage ready for the next build step."
+        description="A full list of enrolled children with classroom, schedule, and parent details at a glance."
       />
 
       <section className="card">
-        <h3>Starter records</h3>
-        <ul className="list">
-          {students.map((student) => (
-            <li key={student.id} className="list-row">
-              <div>
-                <strong>{student.name}</strong>
-                <p>
-                  {student.classroom} • {student.schedule}
-                </p>
-              </div>
-              <span>{student.parentName}</span>
-            </li>
-          ))}
-        </ul>
+        <h3>Enrolled students</h3>
+        {students.length === 0 ? (
+          <EmptyState
+            title="No students enrolled yet"
+            description="Once students are added they will appear here."
+          />
+        ) : (
+          <ul className="list">
+            {students.map((student) => (
+              <li key={student.id} className="list-row">
+                <div>
+                  <strong>{student.name}</strong>
+                  <p>
+                    {student.classroom} &bull; {student.schedule}
+                  </p>
+                  <p>
+                    Parent: {student.parentName} &bull; {student.parentContact}
+                  </p>
+                </div>
+                <span>{student.dayCare === "Yes" ? "Day care ✓" : "Day care: No"}</span>
+              </li>
+            ))}
+          </ul>
+        )}
       </section>
-
-      <EmptyState
-        title="Health, attendance, and pickup details can be added later"
-        description="This page is intentionally simple so the student module can grow safely without changing the overall shell."
-      />
     </div>
   );
 }
