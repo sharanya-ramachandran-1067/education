@@ -2,22 +2,25 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-
-const items = [
-  { href: "/dashboard", label: "Dashboard" },
-  { href: "/enquiries", label: "Enquiries" },
-  { href: "/students", label: "Students" },
-  { href: "/fees", label: "Fees" },
-  { href: "/teachers", label: "Teachers" },
-  { href: "/announcements", label: "Announcements" },
-  { href: "/calendar", label: "Calendar" },
-  { href: "/portal", label: "Parent Portal" },
-  { href: "/handbook", label: "Handbook" },
-  { href: "/settings", label: "Settings" },
-];
+import { useAppContext } from "@/lib/AppContext";
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const { enquiries } = useAppContext();
+  const openCount = enquiries.filter((e) => e.status !== "Converted").length;
+
+  const items = [
+    { href: "/dashboard", label: "Dashboard" },
+    { href: "/enquiries", label: "Enquiries", badge: openCount > 0 ? openCount : undefined },
+    { href: "/students", label: "Students" },
+    { href: "/fees", label: "Fees" },
+    { href: "/teachers", label: "Teachers" },
+    { href: "/announcements", label: "Announcements" },
+    { href: "/calendar", label: "Calendar" },
+    { href: "/portal", label: "Parent Portal" },
+    { href: "/handbook", label: "Handbook" },
+    { href: "/settings", label: "Settings" },
+  ];
 
   return (
     <aside className="sidebar">
@@ -37,7 +40,12 @@ export default function Sidebar() {
               href={item.href}
               className={`sidebar-link${isActive ? " is-active" : ""}`}
             >
-              {item.label}
+              <span className="sidebar-link-wrap">
+                {item.label}
+                {item.badge !== undefined && (
+                  <span className="sidebar-badge">{item.badge}</span>
+                )}
+              </span>
             </Link>
           );
         })}

@@ -42,6 +42,7 @@ export const recentEnquiries: Enquiry[] = [
     interestedProgram: "Playgroup",
     dayCare: "No",
     dayCareTimings: "",
+    followUpDate: "",
     status: "New",
   },
   {
@@ -51,6 +52,7 @@ export const recentEnquiries: Enquiry[] = [
     interestedProgram: "Nursery",
     dayCare: "Yes",
     dayCareTimings: "8:30 AM - 5:30 PM",
+    followUpDate: "",
     status: "Visit booked",
   },
 ];

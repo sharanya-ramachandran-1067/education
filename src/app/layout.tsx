@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Sidebar from "@/components/Sidebar";
 import Topbar from "@/components/Topbar";
+import ToastContainer from "@/components/ToastContainer";
 import { AppProvider } from "@/lib/AppContext";
 import "@/styles/globals.css";
 
@@ -17,15 +18,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <div className="app-shell">
-          <Sidebar />
-          <div className="app-main">
-            <Topbar />
-            <AppProvider>
+        <AppProvider>
+          <div className="app-shell">
+            <Sidebar />
+            <div className="app-main">
+              <Topbar />
+              <ToastContainer />
               <main className="app-content">{children}</main>
-            </AppProvider>
+            </div>
           </div>
-        </div>
+        </AppProvider>
       </body>
     </html>
   );

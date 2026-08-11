@@ -11,6 +11,7 @@ export type Enquiry = {
   interestedProgram: string;
   dayCare: string;
   dayCareTimings: string;
+  followUpDate: string;
   status: "New" | "Follow-up" | "Visit booked" | "Converted";
 };
 
