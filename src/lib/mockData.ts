@@ -62,8 +62,9 @@ export const students: Student[] = [
     classroom: "Nursery A",
     parentName: "Priya",
     parentContact: "priya@example.com",
-    schedule: "Half day",
     dayCare: "No",
+    feesStatus: "Paid",
+    invoiceStatus: "Generated",
   },
   {
     id: "STD-202",
@@ -71,8 +72,9 @@ export const students: Student[] = [
     classroom: "LKG Sunflowers",
     parentName: "Suresh",
     parentContact: "suresh@example.com",
-    schedule: "Full day",
     dayCare: "Yes",
+    feesStatus: "Pending",
+    invoiceStatus: "Pending",
   },
   {
     id: "STD-203",
@@ -80,8 +82,9 @@ export const students: Student[] = [
     classroom: "Playgroup B",
     parentName: "Kavitha",
     parentContact: "kavitha@example.com",
-    schedule: "Half day",
     dayCare: "No",
+    feesStatus: "Overdue",
+    invoiceStatus: "Generated",
   },
   {
     id: "STD-204",
@@ -89,8 +92,9 @@ export const students: Student[] = [
     classroom: "UKG Stars",
     parentName: "Ramesh",
     parentContact: "ramesh@example.com",
-    schedule: "Full day",
     dayCare: "Yes",
+    feesStatus: "Paid",
+    invoiceStatus: "Not sent",
   },
   {
     id: "STD-205",
@@ -98,8 +102,9 @@ export const students: Student[] = [
     classroom: "Nursery B",
     parentName: "Fatima",
     parentContact: "fatima@example.com",
-    schedule: "Half day",
     dayCare: "No",
+    feesStatus: "Pending",
+    invoiceStatus: "Pending",
   },
   {
     id: "STD-206",
@@ -107,8 +112,9 @@ export const students: Student[] = [
     classroom: "LKG Roses",
     parentName: "Divya",
     parentContact: "divya@example.com",
-    schedule: "Full day",
     dayCare: "Yes",
+    feesStatus: "Overdue",
+    invoiceStatus: "Not sent",
   },
 ];
 
