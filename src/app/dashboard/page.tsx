@@ -14,18 +14,19 @@ export default function DashboardPage() {
   }, []);
 
   const stats = useMemo(() => {
-    const studentCount = mounted ? students.length : 0;
-    const enquiryCount = mounted ? enquiries.length : 0;
+    if (!mounted) {
+      return [];
+    }
 
     return [
       {
         title: "Students enrolled",
-        value: studentCount,
+        value: students.length,
         detail: "Across nursery and daycare",
       },
       {
         title: "Open enquiries",
-        value: enquiryCount,
+        value: enquiries.length,
         detail: "Awaiting follow-up",
       },
     ];
@@ -39,14 +40,20 @@ export default function DashboardPage() {
       />
 
       <section className="card-grid">
-        {stats.map((stat) => (
-          <StatCard
-            key={stat.title}
-            title={stat.title}
-            value={stat.value}
-            detail={stat.detail}
-          />
-        ))}
+        {mounted ? (
+          stats.map((stat) => (
+            <StatCard
+              key={stat.title}
+              title={stat.title}
+              value={stat.value}
+              detail={stat.detail}
+            />
+          ))
+        ) : (
+          <div className="card">
+            <p>Loading dashboard…</p>
+          </div>
+        )}
       </section>
     </div>
   );
