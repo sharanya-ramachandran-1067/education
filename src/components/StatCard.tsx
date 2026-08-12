@@ -1,7 +1,7 @@
 type StatCardProps = {
   title: string;
-  value: string;
-  detail: string;
+  value: string | number;
+  detail?: string;
 };
 
 export default function StatCard({ title, value, detail }: StatCardProps) {
@@ -9,7 +9,7 @@ export default function StatCard({ title, value, detail }: StatCardProps) {
     <article className="card stat-card">
       <p className="stat-label">{title}</p>
       <strong className="stat-value">{value}</strong>
-      <span className="stat-detail">{detail}</span>
+      {detail ? <span className="stat-detail">{detail}</span> : null}
     </article>
   );
 }
