@@ -9,7 +9,7 @@ export default function StatCard({ title, value, detail }: StatCardProps) {
     <article className="card stat-card">
       <p className="stat-label">{title}</p>
       <strong className="stat-value">{value}</strong>
-      {detail ? <span className="stat-detail">{detail}</span> : null}
+      <span className="stat-detail">{detail}</span>
     </article>
   );
 }
