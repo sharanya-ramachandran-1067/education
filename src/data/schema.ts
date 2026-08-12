@@ -9,7 +9,16 @@ export const schema: SchemaTable[] = [
   {
     name: "students",
     description: "Enrolled child records, family linkage, and classroom assignment.",
-    fields: ["id", "name", "date_of_birth", "classroom", "parent_id", "schedule", "status"],
+    fields: [
+      "id",
+      "name",
+      "date_of_birth",
+      "classroom",
+      "parent_id",
+      "fees_status",
+      "invoice_status",
+      "status",
+    ],
   },
   {
     name: "fees",

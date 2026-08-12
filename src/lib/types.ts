@@ -19,7 +19,10 @@ export type Student = {
   name: string;
   classroom: string;
   parentName: string;
-  schedule: string;
+  parentContact?: string;
+  dayCare: "Yes" | "No";
+  feesStatus: "Paid" | "Pending" | "Overdue";
+  invoiceStatus: "Generated" | "Pending" | "Not sent";
 };
 
 export type FeeItem = {

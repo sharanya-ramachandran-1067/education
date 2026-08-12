@@ -1,9 +1,9 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import EmptyState from "@/components/EmptyState";
 import ModuleHeader from "@/components/ModuleHeader";
-import { recentEnquiries } from "@/lib/mockData";
+import { useAppContext } from "@/lib/AppContext";
 import type { Enquiry } from "@/lib/types";
 
 const initialForm = {
@@ -16,18 +16,16 @@ const initialForm = {
 };
 
 export default function EnquiriesPage() {
-  const [enquiries, setEnquiries] = useState<Enquiry[]>(recentEnquiries);
+  const { enquiries, addEnquiry, convertEnquiryToStudent } = useAppContext();
   const [form, setForm] = useState(initialForm);
 
-  const nextId = useMemo(() => {
-    const maxNumber = enquiries.reduce((max, enquiry) => {
-      const match = enquiry.id.match(/(\d+)$/);
-      const value = match ? Number(match[1]) : 0;
-      return Math.max(max, value);
-    }, 0);
+  function handleConvert(enquiryId: string) {
+    if (!window.confirm("Convert this enquiry into a student record?")) {
+      return;
+    }
 
-    return `ENQ-${String(maxNumber + 1).padStart(3, "0")}`;
-  }, [enquiries]);
+    convertEnquiryToStudent(enquiryId);
+  }
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -42,17 +40,14 @@ export default function EnquiriesPage() {
       return;
     }
 
-    const newEnquiry: Enquiry = {
-      id: nextId,
+    addEnquiry({
       parentName: form.parentName.trim(),
       childName: form.childName.trim(),
       interestedProgram: form.interestedProgram.trim(),
       dayCare: form.dayCare.trim(),
       dayCareTimings: form.dayCare === "Yes" ? form.dayCareTimings.trim() : "",
       status: form.status,
-    };
-
-    setEnquiries((current) => [newEnquiry, ...current]);
+    });
     setForm(initialForm);
   }
 
@@ -176,7 +171,12 @@ export default function EnquiriesPage() {
                     : ""}
                 </p>
               </div>
-              <span>{enquiry.status}</span>
+              <div>
+                <span>{enquiry.status}</span>
+                <button type="button" onClick={() => handleConvert(enquiry.id)}>
+                  Convert to student
+                </button>
+              </div>
             </li>
           ))}
         </ul>
