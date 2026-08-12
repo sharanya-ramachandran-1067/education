@@ -35,51 +35,63 @@ function createNextId(items: { id: string }[], prefix: string) {
 }
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
-  const [enquiries, setEnquiries] = useState<Enquiry[]>(recentEnquiries);
-  const [students, setStudents] = useState<Student[]>(initialStudents);
+  const [appState, setAppState] = useState<{ enquiries: Enquiry[]; students: Student[] }>({
+    enquiries: recentEnquiries,
+    students: initialStudents,
+  });
+  const { enquiries, students } = appState;
 
   const value = useMemo<AppContextValue>(
     () => ({
       enquiries,
       students,
       addEnquiry: (enquiry) => {
-        setEnquiries((current) => [
-          {
-            ...enquiry,
-            id: createNextId(current, "ENQ"),
-          },
+        setAppState((current) => ({
           ...current,
-        ]);
+          enquiries: [
+            {
+              ...enquiry,
+              id: createNextId(current.enquiries, "ENQ"),
+            },
+            ...current.enquiries,
+          ],
+        }));
       },
       addStudent: (student) => {
-        setStudents((current) => [
-          {
-            ...student,
-            id: createNextId(current, "STD"),
-          },
+        setAppState((current) => ({
           ...current,
-        ]);
+          students: [
+            {
+              ...student,
+              id: createNextId(current.students, "STD"),
+            },
+            ...current.students,
+          ],
+        }));
       },
       convertEnquiryToStudent: (enquiryId) => {
-        const enquiry = enquiries.find((item) => item.id === enquiryId);
-        if (!enquiry) {
-          return;
-        }
+        setAppState((current) => {
+          const enquiry = current.enquiries.find((item) => item.id === enquiryId);
+          if (!enquiry) {
+            return current;
+          }
 
-        setStudents((current) => [
-          {
-            id: createNextId(current, "STD"),
-            name: enquiry.childName,
-            classroom: programToClassroom[enquiry.interestedProgram] ?? enquiry.interestedProgram,
-            parentName: enquiry.parentName,
-            dayCare: enquiry.dayCare === "Yes" ? "Yes" : "No",
-            feesStatus: "Pending",
-            invoiceStatus: "Pending",
-          },
-          ...current,
-        ]);
-
-        setEnquiries((current) => current.filter((item) => item.id !== enquiryId));
+          return {
+            enquiries: current.enquiries.filter((item) => item.id !== enquiryId),
+            students: [
+              {
+                id: createNextId(current.students, "STD"),
+                name: enquiry.childName,
+                classroom: programToClassroom[enquiry.interestedProgram] ?? enquiry.interestedProgram,
+                parentName: enquiry.parentName,
+                dayCare: enquiry.dayCare === "Yes" ? "Yes" : "No",
+                feesStatus: "Pending",
+                invoiceStatus: "Pending",
+              },
+              ...current.students,
+            ],
+          };
+        });
       },
     }),
     [enquiries, students],

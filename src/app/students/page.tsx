@@ -161,17 +161,16 @@ export default function StudentsPage() {
                   <strong>
                     <Link href={`/students/${student.id}`}>{student.name}</Link>
                   </strong>
+                  <p>{student.classroom}</p>
                   <p>
-                    {student.classroom} &bull; Day care: {student.dayCare}
-                  </p>
-                  <p>
-                    Parent: {student.parentName} &bull; {student.parentContact}
+                    Parent: {student.parentName}
+                    {student.parentContact ? ` • ${student.parentContact}` : ""}
                   </p>
                   <p>
                     Fees: {student.feesStatus} &bull; Invoice: {student.invoiceStatus}
                   </p>
                 </div>
-                <span>{student.feesStatus}</span>
+                <span>{student.dayCare === "Yes" ? "Day care ✓" : "Day care: No"}</span>
               </li>
             ))}
           </ul>

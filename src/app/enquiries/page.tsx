@@ -19,6 +19,14 @@ export default function EnquiriesPage() {
   const { enquiries, addEnquiry, convertEnquiryToStudent } = useAppContext();
   const [form, setForm] = useState(initialForm);
 
+  function handleConvert(enquiryId: string) {
+    if (!window.confirm("Convert this enquiry into a student record?")) {
+      return;
+    }
+
+    convertEnquiryToStudent(enquiryId);
+  }
+
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
@@ -165,7 +173,7 @@ export default function EnquiriesPage() {
               </div>
               <div>
                 <span>{enquiry.status}</span>
-                <button type="button" onClick={() => convertEnquiryToStudent(enquiry.id)}>
+                <button type="button" onClick={() => handleConvert(enquiry.id)}>
                   Convert to student
                 </button>
               </div>
