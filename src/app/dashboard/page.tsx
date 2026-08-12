@@ -3,10 +3,9 @@
 import { useEffect, useMemo, useState } from "react";
 import ModuleHeader from "@/components/ModuleHeader";
 import StatCard from "@/components/StatCard";
-import { useAppContext } from "@/lib/AppContext";
+import { recentEnquiries, students as initialStudents } from "@/lib/mockData";
 
 export default function DashboardPage() {
-  const { enquiries, students } = useAppContext();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -15,22 +14,33 @@ export default function DashboardPage() {
 
   const stats = useMemo(() => {
     if (!mounted) {
-      return [];
+      return [
+        {
+          title: "Students enrolled",
+          value: initialStudents.length,
+          detail: "Across nursery and daycare",
+        },
+        {
+          title: "Open enquiries",
+          value: recentEnquiries.length,
+          detail: "Awaiting follow-up",
+        },
+      ];
     }
 
     return [
       {
         title: "Students enrolled",
-        value: students.length,
+        value: initialStudents.length,
         detail: "Across nursery and daycare",
       },
       {
         title: "Open enquiries",
-        value: enquiries.length,
+        value: recentEnquiries.length,
         detail: "Awaiting follow-up",
       },
     ];
-  }, [mounted, students.length, enquiries.length]);
+  }, [mounted]);
 
   return (
     <div className="stack-lg">
@@ -40,20 +50,9 @@ export default function DashboardPage() {
       />
 
       <section className="card-grid">
-        {mounted ? (
-          stats.map((stat) => (
-            <StatCard
-              key={stat.title}
-              title={stat.title}
-              value={stat.value}
-              detail={stat.detail}
-            />
-          ))
-        ) : (
-          <div className="card">
-            <p>Loading dashboard…</p>
-          </div>
-        )}
+        {stats.map((stat) => (
+          <StatCard key={stat.title} {...stat} />
+        ))}
       </section>
     </div>
   );
