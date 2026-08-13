@@ -1,40 +1,38 @@
 # Education
 
-A custom preschool and daycare operations app for **Progress Preschool and Daycare**.
+Progress Preschool and Daycare is a starter scaffold for a custom preschool and daycare operations app.
 
-This project is the starting scaffold for a school operations system that is easy to grow one module at a time.
+It is not a generic CRM. The structure is focused on day-to-day school work such as admissions, classroom operations, teacher management, fee tracking, parent communication, and handbook content.
 
-## What this app is for
+## What this scaffold includes
 
-This app helps manage:
+- A simple app shell with sidebar navigation and a top bar
+- MVP sections for Dashboard, Enquiries, Students, Fees, Teachers, Announcements, Calendar, Parent Portal, Handbook, and Settings
+- Reusable UI building blocks for stat cards, empty states, and module headers
+- Mock data, shared types, and schema placeholders for future persistence
+- In-app notification placeholders and structure that is ready to expand into Zoho Cliq later
+- A clean, non-technical-friendly visual layout for school staff
 
-- Enquiries and admissions
-- Students
-- Fees and receipts
-- Teachers
-- Announcements
-- Calendar and events
-- Parent Portal
-- School handbook pages
-- Settings and school setup
+## Stack
 
-## Why this is not a generic CRM
+This scaffold uses **Next.js with the App Router and TypeScript**.
 
-This app is designed specifically for a preschool and daycare.
+That makes it easy to:
 
-That means it focuses on:
-- parent communication
-- child enrollment
-- class management
-- teacher records
-- fees and receipts
-- events and reminders
-- handbook and policies
-- portal access for parents
+- run locally with very little setup
+- expand one module at a time
+- swap mock data for a real backend later
+- adapt the project to Zoho Catalyst or another serverless deployment target
 
-## MVP modules
+## Project structure
 
-The first version of the app includes:
+- `src/app` - routes and page-level layout
+- `src/components` - reusable UI components
+- `src/lib` - types, mock data, and small utilities
+- `src/data` - schema placeholders for MVP tables
+- `src/styles` - shared global styles
+
+## Current module scaffold
 
 - Dashboard
 - Enquiries
@@ -43,60 +41,36 @@ The first version of the app includes:
 - Teachers
 - Announcements
 - Calendar
-- Portal
+- Parent Portal
 - Handbook
 - Settings
 
-## Suggested stack
+## Product decisions already reflected here
 
-This scaffold is written as a **Next.js app** with a simple modular structure.
-
-It is designed to be:
-- easy to understand
-- easy to expand
-- easy to adapt for serverless hosting
-- suitable for future Zoho Catalyst integration
-
-## Current status
-
-This is a starter scaffold.
-
-It includes:
-- app shell
-- sidebar navigation
-- placeholder module pages
-- reusable UI components
-- mock data and type placeholders
-- schema placeholder file
-
-## Next steps
-
-Suggested next build order:
-
-1. Add the real data layer
-2. Build Enquiries
-3. Build Students
-4. Build Teachers
-5. Build Fees and Receipts
-6. Build Announcements
-7. Build Events Calendar
-8. Add Parent Portal screens
-9. Add Handbook content management
-10. Add Settings screens
-
-## Zoho Cliq / notifications
-
-For now, the app should use:
-- in-app notifications
-- parent portal notices
-- staff-facing internal updates
-
-Zoho Cliq can be added later for internal school communication.
+- Teachers have a dedicated module
+- The Parent Portal is part of the initial navigation
+- In-app notifications are included in the scaffold
+- Zoho Cliq is planned for a later integration step
+- WhatsApp is intentionally not required for version 1
 
 ## Getting started
-
-If you are setting this up locally:
 
 ```bash
 npm install
 npm run dev
+```
+
+Open `http://localhost:3000` and you will be redirected to the dashboard.
+
+## Suggested next steps
+
+1. Replace mock data with a real data layer
+2. Build the Enquiries and Admissions workflow
+3. Expand Students and Teachers into full records screens
+4. Add fee receipts and parent-facing fee history
+5. Add announcement publishing and notification actions
+6. Connect future internal notifications to Zoho Cliq if needed
+
+## Notes for expansion
+
+The mock data and schema placeholders are intentionally isolated so each module can be upgraded independently without changing the whole app shell.
